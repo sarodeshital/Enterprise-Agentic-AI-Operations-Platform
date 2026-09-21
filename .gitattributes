@@ -1,0 +1,9 @@
+# Keep deployment/config artifacts out of GitHub's language percentage.
+Dockerfile linguist-vendored
+Jenkinsfile linguist-vendored
+docker-compose.yml linguist-vendored
+*.yaml linguist-vendored
+*.yml linguist-vendored
+*.md linguist-documentation
+requirements.txt linguist-vendored
+.env.example linguist-vendored
