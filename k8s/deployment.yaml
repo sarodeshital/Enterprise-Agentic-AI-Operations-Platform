@@ -1,1 +1,30 @@
-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enterprise-agentic-ai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: enterprise-agentic-ai
+  template:
+    metadata:
+      labels:
+        app: enterprise-agentic-ai
+    spec:
+      containers:
+        - name: api
+          image: your-registry/enterprise-agentic-ai:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: enterprise-agentic-ai-secrets
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
