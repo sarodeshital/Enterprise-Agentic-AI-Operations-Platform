@@ -1,0 +1,26 @@
+from pathlib import Path
+from app.rag.chunking import split_document
+from app.rag.embeddings import embed_texts
+from app.rag.store import upsert_chunks, init_db
+
+DATA_DIR = Path("data")
+
+
+def main():
+    init_db()
+    rows = []
+    for path in DATA_DIR.glob("*"):
+        if path.suffix.lower() not in {".txt", ".md"}:
+            continue
+        text = path.read_text(encoding="utf-8")
+        chunks = split_document(text)
+        vectors = embed_texts(chunks)
+        for i, (chunk, vector) in enumerate(zip(chunks, vectors)):
+            rows.append((path.name, f"{path.stem}-{i}", chunk, vector))
+    if rows:
+        upsert_chunks(rows)
+    print(f"Ingested {len(rows)} chunks")
+
+
+if __name__ == "__main__":
+    main()
